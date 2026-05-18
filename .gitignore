@@ -116,3 +116,8 @@ x86/
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Matlab Files
+*.sldd
+
+#Office Files
