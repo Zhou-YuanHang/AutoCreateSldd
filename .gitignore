@@ -121,3 +121,5 @@ x86/
 *.sldd
 
 #Office Files
+*.zip
+*.7z
