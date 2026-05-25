@@ -1,11 +1,12 @@
-function Excel2Workspace(AllSheets, fullpath, outputFilename, filename)
+function Excel2Workspace(AllSheets, fullpath, outputFilename, filename, selection)
 %% Excel2Workspace — 从 Excel 读取数据并生成 Simulink 对象 M 脚本
 %  读取 Excel 中的 Signal / Parameter / Const / Bus / BusElement 等 sheet，
 %  生成创建 Simulink 对象的 M 脚本。Enum sheet 额外生成独立的 .m 类定义文件。
 %
 %  用法:
-%    Excel2Workspace                              % 弹出对话框选择文件
-%    Excel2Workspace(AllSheets, fullpath, ...)     % 由 excel_to_sldd 调用
+%    Excel2Workspace                                          % 弹出对话框选择文件
+%    Excel2Workspace(AllSheets, fullpath, outputFilename, filename)           % 4参数，弹 listdlg
+%    Excel2Workspace(AllSheets, fullpath, outputFilename, filename, selection) % 5参数，跳过 listdlg
 
 %% 无参数时自主运行（弹窗选文件）
 if nargin == 0
@@ -32,16 +33,24 @@ for i = 1:length(AllSheets)
     end
 end
 
-%% 让用户选择要处理的 sheet
-[selection, ok] = listdlg('PromptString', '选择要读取的工作表（可多选）', ...
-    'SelectionMode', 'multiple', ...
-    'ListString', AllSheets, ...
-    'Name', '工作表选择', ...
-    'ListSize', [300, 150], ...
-    'InitialValue', defaultSel);
-if ~ok
-    fprintf('用户取消了选择工作表。\n');
-    return;
+%% 让用户选择要处理的 sheet（5参数时跳过 listdlg）
+% 确保 selection 是行向量（R2024b 中 cellstr(sheetnames) 可能返回列向量）
+if nargin >= 5
+    selection = selection(:)';
+end
+if nargin < 5
+    [selection, ok] = listdlg('PromptString', '选择要读取的工作表（可多选）', ...
+        'SelectionMode', 'multiple', ...
+        'ListString', AllSheets, ...
+        'Name', '工作表选择', ...
+        'ListSize', [300, 150], ...
+        'InitialValue', defaultSel);
+    if ~ok
+        fprintf('用户取消了选择工作表。\n');
+        return;
+    end
+else
+    fprintf('使用传入的工作表选择（跳过 dialog）\n');
 end
 
 %% 提取输出目录和基础名

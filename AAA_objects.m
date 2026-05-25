@@ -1,5 +1,5 @@
 %% 自动生成的数据对象文件
-%% 创建时间: 2026-05-17 02:08:21
+%% 创建时间: 2026-05-25 14:44:16
 %% 来源 Excel: AAA.xlsx
 %%
 %% 在 MATLAB 中运行此脚本即可在工作区创建所有 Simulink 对象
@@ -59,7 +59,7 @@ try ParamA.CoderInfo.CustomAttributes.HeaderFile = 'MCU_Fault_Paras.h'; catch, e
 try ParamA.CoderInfo.CustomAttributes.DefinitionFile = 'MCU_Fault_Paras.c'; catch, end
 ParamA.DataType = 'single';
 ParamA.Dimensions = [1 1];
-ParamA.Value = 600;
+ParamA.Value = 111;
 ParamA.Min = 0;
 ParamA.Max = 1000;
 ParamA.Description = 'A相电流故障限值设置';
@@ -77,52 +77,6 @@ ParamB.Max = 10;
 ParamB.Description = '速度环比例系数';
 ParamB.DocUnits = '-';
 ParamB.Complexity = 'real';
-
-%% ----- Parameter: ParamBCopy -----
-ParamBCopy = myPackage.Parameter;
-ParamBCopy.CoderInfo.StorageClass = 'ExportedGlobal';
-ParamBCopy.DataType = 'single';
-ParamBCopy.Dimensions = [1 1];
-ParamBCopy.Value = 0.35;
-ParamBCopy.Min = 0;
-ParamBCopy.Max = 10;
-ParamBCopy.Description = '速度环比例系数';
-ParamBCopy.DocUnits = '-';
-ParamBCopy.Complexity = 'real';
-
-%% ----- Parameter: ParamACopy -----
-ParamACopy = myPackage.Parameter;
-ParamACopy.CoderInfo.StorageClass = 'Custom';
-ParamACopy.CoderInfo.CustomStorageClass = 'YS_SelectRAMPara';
-try ParamACopy.CoderInfo.CustomAttributes.HeaderFile = 'MCU_Fault_Paras.h'; catch, end
-try ParamACopy.CoderInfo.CustomAttributes.DefinitionFile = 'MCU_Fault_Paras.c'; catch, end
-ParamACopy.DataType = 'single';
-ParamACopy.Dimensions = [1 1];
-ParamACopy.Value = 600;
-ParamACopy.Min = 0;
-ParamACopy.Max = 1000;
-ParamACopy.Description = 'A相电流故障限值设置';
-ParamACopy.DocUnits = 'A';
-ParamACopy.Complexity = 'real';
-
-
-%% ================ Const 对象 (Parameter + Define) ================
-
-%% ----- Const: Mode -----
-Mode = Simulink.Parameter;
-Mode.CoderInfo.StorageClass = 'Custom';
-Mode.CoderInfo.CustomStorageClass = 'Define';
-Mode.DataType = 'uint8';
-Mode.Value = 1;
-Mode.CoderInfo.CustomAttributes.HeaderFile = 'Define.h';
-
-%% ----- Const: ModeCopy -----
-ModeCopy = Simulink.Parameter;
-ModeCopy.CoderInfo.StorageClass = 'Custom';
-ModeCopy.CoderInfo.CustomStorageClass = 'Define';
-ModeCopy.DataType = 'uint8';
-ModeCopy.Value = 1;
-ModeCopy.CoderInfo.CustomAttributes.HeaderFile = 'Define.h';
 
 
 %% ================ BusElement 定义 ================

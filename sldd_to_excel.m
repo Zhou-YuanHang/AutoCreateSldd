@@ -18,11 +18,14 @@ excelPath = fullfile(filepath, [baseName, '.xlsx']);
 fprintf('SLDD: %s\n', slddPath);
 fprintf('Excel: %s\n', excelPath);
 
-%% 读取 SLDD
+%% 读取 SLDD（通过 DataSource 过滤，只保留当前字典的条目）
 dictObj = Simulink.data.dictionary.open(slddPath);
-entries = find(getSection(dictObj, 'Design Data'));
+allEntries = find(getSection(dictObj, 'Design Data'));
+[~, slddFileName] = fileparts(slddPath);
+localMask = strcmp({allEntries.DataSource}, [slddFileName, '.sldd']);
+entries = allEntries(localMask);
 close(dictObj);
-fprintf('找到 %d 个条目\n', length(entries));
+fprintf('找到 %d 个条目（当前字典 %d 个）\n', length(allEntries), length(entries));
 
 %% 分类
 data = struct('Signal',{}, 'Parameter',{}, 'Const',{}, 'Bus',{}, 'BusElement',{});

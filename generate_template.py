@@ -14,22 +14,26 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, numbers
 from openpyxl.worksheet.datavalidation import DataValidation
 
 # ═══ 另存为弹窗 ═══
-import tkinter as tk
-from tkinter import filedialog
-
-root = tk.Tk()
-root.withdraw()
-root.attributes('-topmost', True)
-OUT_PATH = filedialog.asksaveasfilename(
-    title="保存模板文件",
-    defaultextension=".xlsx",
-    filetypes=[("Excel 工作簿", "*.xlsx"), ("所有文件", "*.*")],
-    initialfile="MCU_Template.xlsx"
-)
-root.destroy()
-if not OUT_PATH:
-    print("已取消")
-    sys.exit(0)
+import sys
+# 支持命令行参数指定输出路径（GUI 调用时用）
+if len(sys.argv) > 1:
+    OUT_PATH = sys.argv[1]
+else:
+    import tkinter as tk
+    from tkinter import filedialog
+    root = tk.Tk()
+    root.withdraw()
+    root.attributes('-topmost', True)
+    OUT_PATH = filedialog.asksaveasfilename(
+        title="保存模板文件",
+        defaultextension=".xlsx",
+        filetypes=[("Excel 工作簿", "*.xlsx"), ("所有文件", "*.*")],
+        initialfile="MCU_Template.xlsx"
+    )
+    root.destroy()
+    if not OUT_PATH:
+        print("已取消")
+        sys.exit(0)
 
 wb = Workbook()
 
@@ -130,8 +134,8 @@ set_cols(ws, [
 HD_SIG = ["VariableName","Package","Object","CustomStorageClass",
           "DataType","InitialValue","HeaderFile","DefinitionFile",
           "Description","Min","Max","Unit","Dimensions","Complexity"]
-SIG_FILLS = [FILL_DEEP]*5 + [FILL_LIGHT] + [FILL_DEEP]*2 + [FILL_LIGHT]*6
-SIG_FONTS = [FONT_DEEP]*5 + [FONT_LIGHT] + [FONT_DEEP]*2 + [FONT_LIGHT]*6
+SIG_FILLS = [FILL_DEEP]*5 + [FILL_LIGHT]*9
+SIG_FONTS = [FONT_DEEP]*5 + [FONT_LIGHT]*9
 hdr(ws, HD_SIG, SIG_FILLS, SIG_FONTS)
 
 # 下拉列表（引用 Config 数据源）
@@ -157,8 +161,8 @@ set_cols(ws, [
     ("E", 10.375), ("F", 15.375), ("G", 19.375),
     ("I", 20.25), ("J", 4.75), ("K", 5.375), ("L", 5.875), ("M", 12.875),
 ])
-PAR_FILLS = [FILL_DEEP]*8 + [FILL_LIGHT]*6
-PAR_FONTS = [FONT_DEEP]*8 + [FONT_LIGHT]*6
+PAR_FILLS = [FILL_DEEP]*6 + [FILL_LIGHT]*8
+PAR_FONTS = [FONT_DEEP]*6 + [FONT_LIGHT]*8
 hdr(ws, HD_SIG, PAR_FILLS, PAR_FONTS)
 
 # 下拉列表（引用 Config 数据源）
