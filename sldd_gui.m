@@ -249,18 +249,39 @@ tryLoadDefaultWorkbook();
         if isequal(fileName, 0); appendLog('已取消生成模板。'); return; end
         fullOutPath = fullfile(filePath, fileName);
 
-        % Python 版模板生成（传入输出路径，跳过 Python 的弹窗）
+        % 找 Python 脚本（支持 mlappinstall 打包后路径）
         pyOk = false;
-        try; [ok, ~] = system(sprintf('python generate_template.py "%s"', fullOutPath)); pyOk = (ok == 0); catch; end
-        if ~pyOk
-            try; [ok, ~] = system(sprintf('python3 generate_template.py "%s"', fullOutPath)); pyOk = (ok == 0); catch; end
+        scriptPaths = {};
+        scriptPaths{end+1} = 'generate_template.py';
+        scriptPaths{end+1} = fullfile(pwd, 'generate_template.py');
+        try
+            guiDir = fileparts(mfilename('fullpath'));
+            scriptPaths{end+1} = fullfile(guiDir, 'generate_template.py');
+        catch
         end
+
+        for si = 1:numel(scriptPaths)
+            if ~exist(scriptPaths{si}, 'file'); continue; end
+            try; [ok, ~] = system(sprintf('python "%s" "%s"', scriptPaths{si}, fullOutPath)); pyOk = (ok == 0); catch; end
+            if pyOk; break; end
+            try; [ok, ~] = system(sprintf('python3 "%s" "%s"', scriptPaths{si}, fullOutPath)); pyOk = (ok == 0); catch; end
+            if pyOk; break; end
+        end
+
         if pyOk
             appendLog(['模板已生成：', fullOutPath]);
             set(app.excelPathEdit, 'String', fullOutPath);
             loadWorkbook(fullOutPath);
         else
-            appendLog('无法生成模板，请手动运行 generate_template.py。');
+            appendLog('Python 不可用，使用 MATLAB 生成基本模板...');
+            try
+                generateTemplateMatlab(fullOutPath);
+                appendLog(['模板已生成（基本版）：', fullOutPath]);
+                set(app.excelPathEdit, 'String', fullOutPath);
+                loadWorkbook(fullOutPath);
+            catch ME2
+                appendLog(['无法生成模板：', ME2.message]);
+            end
         end
     end
 
@@ -882,6 +903,35 @@ tryLoadDefaultWorkbook();
     function eq = isEqualByStruct(a, b)
         if ~strcmp(class(a), class(b)); eq = false; return; end
         try; eq = isequal(struct(a), struct(b)); catch; try; eq = isequal(a, b); catch; eq = false; end; end
+    end
+
+    function generateTemplateMatlab(outputPath)
+        % MATLAB 自带的模板生成（无 Python 时的 fallback）
+        sigHdr = {'VariableName','Package','Object','CustomStorageClass','DataType',...
+                  'InitialValue','HeaderFile','DefinitionFile',...
+                  'Description','Min','Max','Unit','Dimensions','Complexity'};
+        constHdr = {'Name','Value','DataType','HeaderFile'};
+        enumHdr = {'EnumName','EnumNumbers','Value','DataType'};
+        busHdr = {'BusName','Description','HeaderFile','Alignment','PreserveElementDimensions','DataScope'};
+        beHdr = {'BusName','ElementName','DataType','Dimensions','Description','Unit'};
+
+        sigData = {'示例_Signal','myPackage','Signal','ExportedGlobal','single','None','','','示例Signal','','','','1','real'};
+        parData = {'示例_Parameter','myPackage','Parameter','ExportedGlobal','double','100','','','示例Parameter','','','','1','real'};
+        constData = {'示例_Const','1','uint8','Define.h'};
+        enumData = {'示例_Enum','EnumItem1','0','uint8';'示例_Enum','EnumItem2','1','uint8'};
+        busData = {'示例_Bus','示例Bus','bus.h','-1','False','Auto'};
+        beData = {'示例_Bus','示例Element','double','1','',''};
+
+        writecell({'Version','ChangeDate','Changer','Content'}, outputPath, 'Sheet', 'History');
+        writecell({'V1.0', char(datetime('today','Format','yyyy-MM-dd')), 'AutoCreateSldd', '模板初始化'}, outputPath, 'Sheet', 'History', 'WriteMode', 'append');
+
+        writecell([sigHdr; sigData], outputPath, 'Sheet', 'Signal');
+        writecell([sigHdr; parData], outputPath, 'Sheet', 'Parameter');
+        writecell([constHdr; constData], outputPath, 'Sheet', 'Const');
+        writecell(enumHdr, outputPath, 'Sheet', 'Enum');
+        writecell(enumData, outputPath, 'Sheet', 'Enum', 'WriteMode', 'append');
+        writecell([busHdr; busData], outputPath, 'Sheet', 'Bus');
+        writecell([beHdr; beData], outputPath, 'Sheet', 'BusElement');
     end
 
     function n = cleanManagedEntries(dataSect, keepNames, slddName)

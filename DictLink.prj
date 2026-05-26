@@ -1,6 +1,6 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="932991500" file="C:\Users\ZYH\Desktop\AutoCreateSldd\SlddManger.prj" location="C:\Users\ZYH\Desktop\AutoCreateSldd" name="SlddManger" target="target.mlapps" target-name="打包为 App">
-    <param.appname>SlddManger</param.appname>
+  <configuration build-checksum="3463087745" file="C:\Users\ZYH\Desktop\AutoCreateSldd\DictLink.prj" location="C:\Users\ZYH\Desktop\AutoCreateSldd" name="DictLink" target="target.mlapps" target-name="打包为 App">
+    <param.appname>DictLink</param.appname>
     <param.authnamewatermark />
     <param.email />
     <param.company />
@@ -8,14 +8,14 @@
     <param.icons />
     <param.summary />
     <param.description />
-    <param.screenshot />
+    <param.screenshot>F:\Edge下载\Excel管理Simulink数据字典文件图标.png</param.screenshot>
     <param.version>1.0</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
     <param.platforms />
     <param.output>${PROJECT_ROOT}</param.output>
-    <param.guid>913d4454-2eea-49f3-ab49-e8dfd6fca1a4</param.guid>
+    <param.guid>b582ff22-e58d-4b39-b388-1a1a21e1335d</param.guid>
     <unset>
       <param.authnamewatermark />
       <param.email />
@@ -24,7 +24,6 @@
       <param.icons />
       <param.summary />
       <param.description />
-      <param.screenshot />
       <param.version />
       <param.products.name />
       <param.products.id />
