@@ -1,8 +1,5 @@
 function sldd_to_excel()
 %% sldd_to_excel — SLDD → Excel 反向同步
-%  MATLAB 负责读 SLDD、对比数据，Python 负责写 Excel（保留全部格式）。
-%
-%  用法：在 MATLAB 命令窗口运行 sldd_to_excel
 
 clc;
 fprintf('===============================================\n');
